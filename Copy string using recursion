@@ -1,0 +1,20 @@
+#include<stdio.h>
+void stringCopy(char *src,char *dest) 
+{
+    if(*src=='\0') 
+	{
+        *dest='\0';
+        return;
+    }
+    *dest=*src;
+    stringCopy(src+1,dest+1);
+}
+int main() 
+{
+    char source[100],destination[100];
+    printf("Enter a string: ");
+    fgets(source,sizeof(source),stdin);
+    stringCopy(source,destination);
+    printf("Source string: %s",source);
+    printf("Copied string: %s",destination);
+}
