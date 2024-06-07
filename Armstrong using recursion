@@ -1,0 +1,31 @@
+#include<stdio.h>
+int arm(int n);
+int main()
+{
+	int n;
+	scanf("%d",&n);
+	int res=arm(n);
+	if(res==1)
+	{
+		printf("%d is an armstrong",n);
+	}
+	else
+	printf("%d is not an armstrong",n);
+}
+int arm(int n)
+{
+	int sum=0,m,temp=n;
+	if(n>0)
+	{
+		while(n>0)
+		{
+			m=n%10;
+			sum=sum+(m*m*m);
+			n=n/10;
+		}
+	}
+	if(sum==temp)
+	return 1;
+	else
+	return 0;
+}
