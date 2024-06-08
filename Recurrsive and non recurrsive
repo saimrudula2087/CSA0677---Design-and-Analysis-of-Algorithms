@@ -1,0 +1,22 @@
+#include<stdio.h>
+int fact(int n);
+int main()
+{
+	int n1,n2,sum=0,i;
+	scanf("%d%d",&n1,&n2);
+	for(i=0;i<=n1;i++)
+	{
+		sum=sum+i;
+	}
+	printf("Sum = %d",sum);
+	printf("\nFactorial = %d",fact(n2));
+}
+int fact(int n)
+{
+	int f;
+	if(n<=1)
+	return n;
+	else
+	f=n*fact(n-1);
+	return f;
+}
