@@ -1,0 +1,15 @@
+#include<stdio.h>
+#include<math.h>
+int iterationMethod(int n) 
+{
+    if(n == 1)
+        return 1;
+    return 2*iterationMethod(n/2)+n;
+}
+int main() 
+{
+    int n=16; 
+    int result=iterationMethod(n);
+    printf("Result of recurrence for n = %d: %d\n",n,result);
+    printf("Time Complexity using Iteration Method: O(n log n)\n");
+}
