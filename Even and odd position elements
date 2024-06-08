@@ -1,0 +1,23 @@
+#include<stdio.h>
+int main()
+{
+	int a[]={23,14,88,56,67,83,20,29};
+	int n,i;
+	n=sizeof(a)/sizeof(a[0]);
+	printf("even conditions: ");
+	for(i=0;i<n;i++)
+	{
+		if(i%2==0)
+		{
+			printf("%d ",a[i]);
+		}
+	}
+	printf("\nodd conditions: ");
+	for(i=0;i<n;i++)
+	{
+		if(i%2!=0)
+		{
+			printf("%d ",a[i]);
+		}
+	}
+}
