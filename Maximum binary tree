@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+};
+struct TreeNode* newNode(int val) {
+    struct TreeNode* node = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    node->val = val;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+int findMaxIndex(int* nums, int start, int end) {
+    int maxIndex = start;
+    for (int i = start + 1; i <= end; i++) {
+        if (nums[i] > nums[maxIndex]) {
+            maxIndex = i;
+        }
+    }
+    return maxIndex;
+}
+struct TreeNode* constructMaximumBinaryTree(int* nums, int start, int end) {
+    if (start > end) {
+        return NULL;
+    }
+    int maxIndex = findMaxIndex(nums, start, end);
+    struct TreeNode* root = newNode(nums[maxIndex]);
+    root->left = constructMaximumBinaryTree(nums, start, maxIndex - 1);
+    root->right = constructMaximumBinaryTree(nums, maxIndex + 1, end);
+    return root;
+}
+void inorderTraversal(struct TreeNode* root) {
+    if (root == NULL) {
+        return;
+    }
+    inorderTraversal(root->left);
+    printf("%d ", root->val);
+    inorderTraversal(root->right);
+}
+
+int main() {
+    int nums[] = {3, 2, 1, 6, 0, 5};
+    int size = sizeof(nums) / sizeof(nums[0]);
+
+    struct TreeNode* root = constructMaximumBinaryTree(nums, 0, size - 1);
+
+    printf("Inorder Traversal of the Maximum Binary Tree: ");
+    inorderTraversal(root);
+
+    return 0;
+}
