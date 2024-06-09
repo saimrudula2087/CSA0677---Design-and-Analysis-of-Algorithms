@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <string.h>
+int cost(char t[], int i) {
+    int count = 0;
+    for (int j = 0; j < i; j++) {
+        if (t[j] == t[i]) {
+            count++;
+        }
+    }
+    return count;
+}
+void replaceQuestionMarks(char s[]) {
+    char alphabet[] = "abcdefghijklmnopqrstuvwxyz";
+    int len = strlen(s);   
+    for (int i = 0; i < len; i++) {
+        if (s[i] == '?') {
+            int minCost = len; // Initialize with a large value
+            char bestChar = 'a'; // Initialize with any character       
+            for (int j = 0; j < 26; j++) {
+                s[i] = alphabet[j];
+                int totalCost = 0;
+                for (int k = 0; k < len; k++) 
+                    if (s[k] != '?') {
+                        totalCost += cost(s, k);
+                    }
+                }  
+                if (totalCost < minCost) {
+                    minCost = totalCost;
+                    bestChar = alphabet[j];
+                }
+            }
+            s[i] = bestChar;
+        }
+    }
+}
+int main() {
+    char s[] = "a?b?c?";
+    replaceQuestionMarks(s);
+    printf("Modified string: %s\n", s);
+    return 0;
+}
