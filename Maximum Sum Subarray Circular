@@ -1,0 +1,30 @@
+#include <stdio.h>
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+int maxSubarraySum(int nums[], int numsSize) {
+    int max_sum = nums[0];
+    int current_sum = nums[0];
+    for (int i = 1; i < numsSize; i++) {
+        current_sum = max(nums[i], current_sum + nums[i]);
+        max_sum = max(max_sum, current_sum);
+    }
+    return max_sum;
+}
+int maxSubarraySumCircular(int nums[], int numsSize) {
+    int linear_max_sum = maxSubarraySum(nums, numsSize);
+    int total_sum = 0;
+    for (int i = 0; i < numsSize; i++) {
+        total_sum += nums[i];
+    }
+    int min_sum = maxSubarraySum(nums, numsSize);
+    int circular_max_sum = total_sum + min_sum;
+    return (circular_max_sum == 0) ? linear_max_sum : max(linear_max_sum, circular_max_sum);
+}
+int main() {
+    int nums[] = {5, -3, 5};
+    int numsSize = sizeof(nums) / sizeof(nums[0]);
+    int max_sum = maxSubarraySumCircular(nums, numsSize);
+    printf("Maximum sum of a non-empty subarray: %d\n", max_sum);
+    return 0;
+}
