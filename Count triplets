@@ -1,0 +1,28 @@
+#include <stdio.h>
+int countTriplets(int* arr, int arrSize) 
+{
+    int count = 0;
+    for (int i = 0; i < arrSize; ++i) 
+	{
+        int xorSum = 0;
+        for (int j = i; j < arrSize; ++j) 
+		{
+            xorSum ^= arr[j];
+            if (xorSum == 0 && j > i) 
+			{
+                count += (j - i);
+            }
+        }
+    }
+    return count;
+}
+int main() 
+{
+    int arr1[] = {2, 3, 1, 6, 7};
+    int size1 = sizeof(arr1) / sizeof(arr1[0]);
+    printf("%d\n", countTriplets(arr1, size1)); 
+
+    int arr2[] = {1, 1, 1, 1, 1};
+    int size2 = sizeof(arr2) / sizeof(arr2[0]);
+    printf("%d\n", countTriplets(arr2, size2)); 
+}
