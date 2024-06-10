@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MOD 1000000007
+int countWays(char** pizza, int pizzaSize, int pizzaColSize, int k, int*** memo, int** prefix, int r, int c, int kLeft) {
+    if (prefix[r][c] == 0) return 0;  
+    if (kLeft == 0) return 1;        
+    if (memo[r][c][kLeft] != -1) return memo[r][c][kLeft];
+    int ways = 0;
+    for (int i = r + 1; i < pizzaSize; i++) {
+        if (prefix[r][c] - prefix[i][c] > 0) {
+            ways = (ways + countWays(pizza, pizzaSize, pizzaColSize, k, memo, prefix, i, c, kLeft - 1)) % MOD;
+        }
+    }
+    for (int j = c + 1; j < pizzaColSize; j++) {
+        if (prefix[r][c] - prefix[r][j] > 0) {
+            ways = (ways + countWays(pizza, pizzaSize, pizzaColSize, k, memo, prefix, r, j, kLeft - 1)) % MOD;
+        }
+    }
+    memo[r][c][kLeft] = ways;
+    return ways;
+}
+int ways(char** pizza, int pizzaSize, int k) {
+    int pizzaColSize = strlen(pizza[0]);
+    int** prefix = (int*)malloc((pizzaSize + 1) * sizeof(int));
+    for (int i = 0; i <= pizzaSize; i++) {
+        prefix[i] = (int*)calloc(pizzaColSize + 1, sizeof(int));
+    }
+    for (int i = pizzaSize - 1; i >= 0; i--) {
+        for (int j = pizzaColSize - 1; j >= 0; j--) {
+            prefix[i][j] = (pizza[i][j] == 'A') + prefix[i + 1][j] + prefix[i][j + 1] - prefix[i + 1][j + 1];
+        }
+    }
+    int*** memo = (int*)malloc(pizzaSize * sizeof(int**));
+    for (int i = 0; i < pizzaSize; i++) {
+        memo[i] = (int*)malloc(pizzaColSize * sizeof(int));
+        for (int j = 0; j < pizzaColSize; j++) {
+            memo[i][j] = (int*)malloc(k * sizeof(int));
+            for (int l = 0; l < k; l++) {
+                memo[i][j][l] = -1;
+            }
+        }
+    }
+    int result = countWays(pizza, pizzaSize, pizzaColSize, k, memo, prefix, 0, 0, k - 1);
+
+    for (int i = 0; i <= pizzaSize; i++) {
+        free(prefix[i]);
+    }
+    free(prefix);
+    for (int i = 0; i < pizzaSize; i++) {
+        for (int j = 0; j < pizzaColSize; j++) {
+            free(memo[i][j]);
+        }
+        free(memo[i]);
+    }
+    free(memo);
+    return result;
+}
+int main() {
+    char* pizza1[] = {"A..", "AAA", "..."};
+    printf("%d\n", ways(pizza1, 3, 3)); 
+    char* pizza2[] = {"A..", "AA.", "..."};
+    printf("%d\n", ways(pizza2, 3, 3)); 
+    char* pizza3[] = {"A..", "A..", "..."};
+    printf("%d\n", ways(pizza3, 3, 1)); 
+    return 0;
+}
