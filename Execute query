@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <sqlite3.h>
+#include <stdlib.h>
+void executeQuery(sqlite3 *db, const char *sql) 
+{
+    char *errMsg = 0;
+    int rc = sqlite3_exec(db, sql, 0, 0, &errMsg);
+    if (rc != SQLITE_OK) 
+	{
+        fprintf(stderr, "SQL error: %s\n", errMsg);
+        sqlite3_free(errMsg);
+    }
+}
+int main() 
+{
+    sqlite3 *db;
+    char *errMsg = 0;
+    int rc = sqlite3_open(":memory:", &db);
+    if (rc) 
+	{
+        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        return 1;
+    } else 
+	{
+        fprintf(stderr, "Opened database successfully\n");
+    }
+    const char *sqlCreateVariables = "CREATE TABLE Variables("
+                                     "name TEXT PRIMARY KEY,"
+                                     "value INT NOT NULL);";
+    executeQuery(db, sqlCreateVariables);
+    const char *sqlInsertVariables = "INSERT INTO Variables (name, value) VALUES "
+                                     "('x', 66),"
+                                     "('y', 77);";
+    executeQuery(db, sqlInsertVariables);
+    const char *sqlCreateExpressions = "CREATE TABLE Expressions("
+                                       "left_operand TEXT,"
+                                       "operator TEXT,"
+                                       "right_operand TEXT);";
+    executeQuery(db, sqlCreateExpressions);
+    const char *sqlInsertExpressions = "INSERT INTO Expressions (left_operand, operator, right_operand) VALUES "
+                                       "('x', '>', 'y'),"
+                                       "('x', '<', 'y'),"
+                                       "('x', '=', 'y'),"
+                                       "('y', '>', 'x'),"
+                                       "('y', '<', 'x'),"
+                                       "('x', '=', 'x');";
+    executeQuery(db, sqlInsertExpressions);
+    const char *sqlEvaluateExpressions = "SELECT e.left_operand, e.operator, e.right_operand, "
+                                         "CASE "
+                                         "WHEN e.operator = '>' AND v1.value > v2.value THEN 'true' "
+                                         "WHEN e.operator = '<' AND v1.value < v2.value THEN 'true' "
+                                         "WHEN e.operator = '=' AND v1.value = v2.value THEN 'true' "
+                                         "ELSE 'false' "
+                                         "END as value "
+                                         "FROM Expressions e "
+                                         "JOIN Variables v1 ON e.left_operand = v1.name "
+                                         "JOIN Variables v2 ON e.right_operand = v2.name;";
+    int callback(void *NotUsed, int argc, char **argv, char **azColName) {
+        for (int i = 0; i < argc; i++) {
+            printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+        }
+        printf("\n");
+        return 0;
+    }
+    rc = sqlite3_exec(db, sqlEvaluateExpressions, callback, 0, &errMsg);
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "SQL error: %s\n", errMsg);
+        sqlite3_free(errMsg);
+    }
+    sqlite3_close(db);
+}
