@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <stdbool.h>
+bool kLengthApart(int* nums, int numsSize, int k) 
+{
+    int last_one = -k - 1; 
+    for (int i = 0; i < numsSize; i++) 
+	{
+        if (nums[i] == 1) {
+            if (i - last_one <= k) 
+			{
+                return false;
+            }
+            last_one = i;
+        }
+    }   
+    return true;
+}
+int main() {
+    int nums1[] = {1, 0, 0, 0, 1, 0, 0, 1};
+    int nums2[] = {1, 0, 0, 1, 0, 1};
+    printf("%d\n", kLengthApart(nums1, 8, 2)); 
+    printf("%d\n", kLengthApart(nums2, 6, 2)); 
+    return 0;
+}
