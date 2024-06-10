@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+int compare(const void* a, const void* b) {
+    return ((int a) - (intb));
+}
+
+void kSmallestSums(int** mat, int matSize, int matColSize, int* result, int k) {
+    int* heap = (int*)malloc(k * sizeof(int));
+    int heapSize = 0;
+    heap[heapSize++] = 0;
+
+    for (int i = 0; i < matSize; ++i) {
+        int* temp = (int*)malloc(k * sizeof(int));
+        int tempSize = 0;
+        for (int j = 0; j < heapSize; ++j) {
+            for (int l = 0; l < matColSize; ++l) {
+                int sum = heap[j] + mat[i][l];
+                if (tempSize < k) {
+                    temp[tempSize++] = sum;
+                    if (tempSize == k) {
+                        qsort(temp, tempSize, sizeof(int), compare);
+                    }
+                } else if (sum < temp[tempSize - 1]) {
+                    temp[tempSize - 1] = sum;
+                    qsort(temp, tempSize, sizeof(int), compare);
+                }
+            }
+        }
+        heapSize = tempSize;
+        for (int m = 0; m < heapSize; ++m) {
+            heap[m] = temp[m];
+        }
+        free(temp);
+    }
+
+    for (int i = 0; i < k; ++i) {
+        result[i] = heap[i];
+    }
+
+    free(heap);
+}
+
+int kthSmallest(int** mat, int matSize, int* matColSize, int k) {
+    int* result = (int*)malloc(k * sizeof(int));
+    kSmallestSums(mat, matSize, *matColSize, result, k);
+    int kthSmallestSum = result[k - 1];
+    free(result);
+    return kthSmallestSum;
+}
+
+int main() {
+    int mat1[][3] = {{1, 3, 11}, {2, 4, 6}};
+    int* mat1Ptrs[] = {mat1[0], mat1[1]};
+    int colSize1 = 3;
+    printf("%d\n", kthSmallest(mat1Ptrs, 2, &colSize1, 5)); 
+
+    int mat2[][3] = {{1, 3, 11}, {2, 4, 6}};
+    int* mat2Ptrs[] = {mat2[0], mat2[1]};
+    int colSize2 = 3;
+    printf("%d\n", kthSmallest(mat2Ptrs, 2, &colSize2, 9)); 
+    int mat3[][3] = {{1, 10, 10}, {1, 4, 5}, {2, 3, 6}};
+    int* mat3Ptrs[] = {mat3[0], mat3[1], mat3[2]};
+    int colSize3 = 3;
+    printf("%d\n", kthSmallest(mat3Ptrs, 3, &colSize3, 7));
+
+}
