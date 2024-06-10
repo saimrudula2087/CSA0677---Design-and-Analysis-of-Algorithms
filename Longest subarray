@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#define max(a, b) ((a) > (b) ? (a) : (b))
+typedef struct 
+{
+    int *data;
+    int front;
+    int back;
+} Deque;
+void dequeInit(Deque *deque, int size) 
+{
+    deque->data = (int *)malloc(size * sizeof(int));
+    deque->front = 0;
+    deque->back = 0;
+}
+void dequePushBack(Deque *deque, int value) 
+{
+    deque->data[deque->back++] = value;
+}
+void dequePopFront(Deque *deque) 
+{
+    deque->front++;
+}
+void dequePopBack(Deque *deque) 
+{
+    deque->back--;
+}
+int dequeFront(Deque *deque) 
+{
+    return deque->data[deque->front];
+}
+int dequeBack(Deque *deque) 
+{
+    return deque->data[deque->back - 1];
+}
+int dequeSize(Deque *deque) 
+{
+    return deque->back - deque->front;
+}
+void dequeFree(Deque *deque) 
+{
+    free(deque->data);
+}
+int longestSubarray(int* nums, int numsSize, int limit) 
+{
+    Deque minDeque, maxDeque;
+    dequeInit(&minDeque, numsSize);
+    dequeInit(&maxDeque, numsSize);
+    int left = 0;
+    int result = 0;
+    for (int right = 0; right < numsSize; right++) 
+	{
+        while (dequeSize(&minDeque) > 0 && nums[dequeBack(&minDeque)] > nums[right]) 
+		{
+            dequePopBack(&minDeque);
+        }
+        dequePushBack(&minDeque, right);
+        while (dequeSize(&maxDeque) > 0 && nums[dequeBack(&maxDeque)] < nums[right]) 
+		{
+            dequePopBack(&maxDeque);
+        }
+        dequePushBack(&maxDeque, right);
+        while (nums[dequeFront(&maxDeque)] - nums[dequeFront(&minDeque)] > limit) 
+		{
+            if (dequeFront(&minDeque) == left) 
+			{
+                dequePopFront(&minDeque);
+            }
+            if (dequeFront(&maxDeque) == left) 
+			{
+                dequePopFront(&maxDeque);
+            }
+            left++;
+        }
+        result = max(result, right - left + 1);
+    }
+    dequeFree(&minDeque);
+    dequeFree(&maxDeque);
+    return result;
+}
+int main() 
+{
+    int nums1[] = {8, 2, 4, 7};
+    int nums2[] = {10, 1, 2, 4, 7, 2};
+    int nums3[] = {4, 2, 2, 2, 4, 4, 2, 2};
+    printf("%d\n", longestSubarray(nums1, 4, 4)); 
+    printf("%d\n", longestSubarray(nums2, 6, 5));  
+    printf("%d\n", longestSubarray(nums3, 8, 0)); 
+}
