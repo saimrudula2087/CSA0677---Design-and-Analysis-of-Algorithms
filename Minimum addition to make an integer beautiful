@@ -1,0 +1,27 @@
+#include <stdio.h>
+int digitSum(int number) {
+    int sum = 0;
+    while (number > 0) {
+        sum += number % 10;
+        number /= 10;
+    }
+    return sum;
+}
+int makeBeautiful(int n, int target) {
+    int x = 0;
+    while (digitSum(n + x) > target) {
+        x++;
+    }
+
+    return x;
+}
+
+int main() {
+    int n = 16;
+    int target = 6;
+    
+    int result = makeBeautiful(n, target);
+    printf("Minimum x to make n beautiful: %d\n", result);
+
+    return 0;
+}
