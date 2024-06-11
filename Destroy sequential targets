@@ -1,0 +1,49 @@
+
+#include <stdio.h>
+
+int minSeedsToDestroy(int* nums, int numsSize, int space) {
+    int maxTargets = 0;
+    int minSeed = nums[0];
+
+    for (int i = 0; i < numsSize; i++) {
+        int targets = 1;
+        int current = nums[i];
+        
+        while (1) {
+            int nextTarget = current + space;
+            int found = 0;
+            
+            for (int j = 0; j < numsSize; j++) {
+                if (nums[j] == nextTarget) {
+                    found = 1;
+                    break;
+                }
+            }
+            
+            if (found) {
+                targets++;
+                current = nextTarget;
+            } else {
+                break;
+            }
+        }
+        
+        if (targets > maxTargets) {
+            maxTargets = targets;
+            minSeed = nums[i];
+        }
+    }
+
+    return minSeed;
+}
+
+int main() {
+    int nums[] = {3, 7, 8, 1, 1, 5};
+    int space = 2;
+    int numsSize = sizeof(nums) / sizeof(nums[0]);
+
+    int result = minSeedsToDestroy(nums, numsSize, space);
+    printf("Minimum seed value to destroy maximum targets: %d\n", result);
+
+    return 0;
+}
