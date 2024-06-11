@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#define MAXN 1001
+int parent[MAXN];
+void init(int n) {
+    for (int i = 0; i < n; i++) {
+        parent[i] = i;
+    }
+}
+
+int find(int x) {
+    if (parent[x] != x) {
+        parent[x] = find(parent[x]);
+    }
+    return parent[x];
+}
+
+void union_set(int x, int y) {
+    int root_x = find(x);
+    int root_y = find(y);
+    if (root_x != root_y) {
+        parent[root_x] = root_y;
+    }
+}
+
+int main() {
+    char s[MAXN];
+    int n, m;
+    printf("Enter the length of the string: ");
+    scanf("%d", &n);
+    printf("Enter the string: ");
+    scanf("%s", s);
+    printf("Enter the number of pairs: ");
+    scanf("%d", &m);
+
+    init(n);
+
+    printf("Enter the pairs of indices:\n");
+    for (int i = 0; i < m; i++) {
+        int a, b;
+        scanf("%d %d", &a, &b);
+        union_set(a, b);
+    }
+
+    char group[MAXN][MAXN];
+    int group_size[MAXN] = {0};
+
+    for (int i = 0; i < n; i++) {
+        int root = find(i);
+        group[root][group_size[root]++] = s[i];
+    }
+
+    for (int i = 0; i < n; i++) {
+        int root = find(i);
+        qsort(group[root], group_size[root], sizeof(char), (int (*)(const void*, const void*))strcmp);
+    }
+
+    int idx[MAXN];
+    for (int i = 0; i < n; i++) {
+        int root = find(i);
+        idx[i] = group_size[root] - 1;
+    }
+
+    for (int i = 0; i < n; i++) {
+        int root = find(i);
+        s[i] = group[root][idx[i]--];
+    }
+
+    printf("The lexicographically smallest string is: %s\n", s);
+
+    return 0;
+}
