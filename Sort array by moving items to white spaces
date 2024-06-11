@@ -1,0 +1,25 @@
+#include <stdio.h>
+int minOperationsToSort(int nums[], int n) {
+    int operations = 0;
+    for (int i = 0; i < n - 1; i++) {
+        if (nums[i] != i) {
+            int j = i + 1;
+            while (nums[j] != i) {
+                j++;
+            }
+            int temp = nums[j];
+            nums[j] = nums[i];
+            nums[i] = temp;
+            operations++;
+        }
+    }
+    return operations;
+}
+
+int main() {
+    int nums[] = {4, 2, 0, 3, 1};
+    int n = sizeof(nums) / sizeof(nums[0]);
+    int minOps = minOperationsToSort(nums, n);
+    printf("Minimum number of operations needed to sort nums: %d\n", minOps);
+    return 0;
+}
