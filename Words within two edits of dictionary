@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int isWithinTwoEdits(char* word1, char* word2) {
+    int len = strlen(word1);
+    int editCount = 0;
+    for (int i = 0; i < len; i++) {
+        if (word1[i] != word2[i]) {
+            editCount++;
+            if (editCount > 2) {
+                return 0;  // More than 2 edits
+            }
+        }
+    }
+    return 1;  // 2 or fewer edits
+}
+char** wordsWithinTwoEdits(char** queries, int queriesSize, char** dictionary, int dictionarySize, int* returnSize) {
+    char** result = (char*)malloc(queriesSize * sizeof(char));
+    *returnSize = 0;
+
+    for (int i = 0; i < queriesSize; i++) {
+        for (int j = 0; j < dictionarySize; j++) {
+            if (isWithinTwoEdits(queries[i], dictionary[j])) {
+                result[*returnSize] = queries[i];
+                (*returnSize)++;
+                break;
+            }
+        }
+    }
+
+    return result;
+}
+void printStringArray(char** arr, int size) {
+    for (int i = 0; i < size; i++) {
+        printf("%s\n", arr[i]);
+    }
+}
+
+int main() {
+    char* queries[] = {"word", "note", "ants", "wood"};
+    int queriesSize = sizeof(queries) / sizeof(queries[0]);
+
+    char* dictionary[] = {"wood", "joke", "moat"};
+    int dictionarySize = sizeof(dictionary) / sizeof(dictionary[0]);
+
+    int returnSize;
+    char** result = wordsWithinTwoEdits(queries, queriesSize, dictionary, dictionarySize, &returnSize);
+
+    printStringArray(result, returnSize);
+
+    free(result);
+
+    return 0;
+}
