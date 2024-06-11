@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <string.h>
+char* findOddStringDifference(char** words, int wordsSize) {
+    int n = strlen(words[0]);
+    int diff[n - 1];
+    memset(diff, 0, sizeof(diff));
+
+    for (int i = 0; i < n - 1; i++) {
+        diff[i] = words[0][i + 1] - words[0][i];
+    }
+
+    char* result = NULL;
+
+    for (int i = 1; i < wordsSize; i++) {
+        int temp[n - 1];
+        memset(temp, 0, sizeof(temp));
+
+        for (int j = 0; j < n - 1; j++) {
+            temp[j] = words[i][j + 1] - words[i][j];
+        }
+
+        int equal = 1;
+        for (int j = 0; j < n - 1; j++) {
+            if (temp[j] != diff[j]) {
+                equal = 0;
+                break;
+            }
+        }
+
+        if (!equal) {
+            result = words[i];
+            break;
+        }
+    }
+
+    return result;
+}
+
+int main() {
+    char* words[] = {"adc", "wzy", "abc"};
+    int wordsSize = sizeof(words) / sizeof(words[0]);
+
+    char* oddString = findOddStringDifference(words, wordsSize);
+
+    if (oddString != NULL) {
+        printf("Odd String Difference: %s\n", oddString);
+    } else {
+        printf("No odd string difference found.\n");
+    }
+
+    return 0;
+}
