@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+struct Point {
+    int x;
+    int y;
+};
+double calculateDistance(struct Point p) {
+    return sqrt(p.x * p.x + p.y * p.y);
+}
+
+int compare(const void* a, const void* b) {
+    struct Point* pointA = (struct Point*)a;
+    struct Point* pointB = (struct Point*)b;
+    double distA = calculateDistance(*pointA);
+    double distB = calculateDistance(*pointB);
+    return distA - distB;
+}
+
+void findClosestPoints(struct Point points[], int n, int k) {
+    qsort(points, n, sizeof(struct Point), compare);
+    
+    printf("The %d closest points to the origin are:\n", k);
+    for (int i = 0; i < k; i++) {
+        printf("(%d, %d)\n", points[i].x, points[i].y);
+    }
+}
+
+int main() {
+    struct Point points[] = {{1, 2}, {3, 4}, {5, 6}, {0, 0}, {2, 2}};
+    int k = 3;
+    int n = sizeof(points) / sizeof(points[0]);
+    
+    if (k > n) {
+        printf("Invalid input: k should be less than or equal to the total number of points.\n");
+        return 1;
+    }
+    
+    findClosestPoints(points, n, k);
+    
+    return 0;
+}
