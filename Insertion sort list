@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct ListNode {
+    int val;
+    struct ListNode *next;
+};
+struct ListNode* sortedInsert(struct ListNode* head, struct ListNode* node) {
+    if (!head || head->val >= node->val) {
+        node->next = head;
+        return node;
+    }
+    struct ListNode* current = head;
+    while (current->next && current->next->val < node->val) {
+        current = current->next;
+    }
+    node->next = current->next;
+    current->next = node;
+    return head;
+}
+struct ListNode* insertionSortList(struct ListNode* head) {
+    struct ListNode* sorted = NULL; 
+    struct ListNode* current = head; 
+    while (current) {
+        struct ListNode* next = current->next; 
+        sorted = sortedInsert(sorted, current);
+        current = next; 
+    }
+    return sorted;
+}
+
+struct ListNode* createNode(int val) {
+    struct ListNode* newNode = (struct ListNode*)malloc(sizeof(struct ListNode));
+    newNode->val = val;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void printList(struct ListNode* head) {
+    struct ListNode* current = head;
+    while (current) {
+        printf("%d -> ", current->val);
+        current = current->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+  
+    struct ListNode* head = createNode(4);
+    head->next = createNode(2);
+    head->next->next = createNode(1);
+    head->next->next->next = createNode(3);
+
+    printf("Unsorted List: ");
+    printList(head);
+
+    head = insertionSortList(head);
+    printf("Sorted List: ");
+    printList(head);
+    return 0;
+}
