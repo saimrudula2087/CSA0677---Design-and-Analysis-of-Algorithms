@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct ListNode {
+    int val;
+    struct ListNode *next;
+};
+
+struct ListNode* mergeTwoLists(struct ListNode* l1, struct ListNode* l2) {
+    struct ListNode dummy;
+    struct ListNode *tail = &dummy;
+    dummy.next = NULL;
+
+    while (l1 && l2) {
+        if (l1->val < l2->val) {
+            tail->next = l1;
+            l1 = l1->next;
+        } else {
+            tail->next = l2;
+            l2 = l2->next;
+        }
+        tail = tail->next;
+    }
+
+    tail->next = (l1 != NULL) ? l1 : l2;
+
+    return dummy.next;
+}
+void printList(struct ListNode *node) {
+    while (node != NULL) {
+        printf("%d ", node->val);
+        node = node->next;
+    }
+    printf("\n");
+}
+struct ListNode* newNode(int val) {
+    struct ListNode* temp = (struct ListNode*)malloc(sizeof(struct ListNode));
+    temp->val = val;
+    temp->next = NULL;
+    return temp;
+}
+
+int main() {
+    struct ListNode* l1 = newNode(1);
+    l1->next = newNode(2);
+    l1->next->next = newNode(4);
+
+    struct ListNode* l2 = newNode(1);
+    l2->next = newNode(3);
+    l2->next->next = newNode(4);
+
+    printf("First sorted list: ");
+    printList(l1);
+
+    printf("Second sorted list: ");
+    printList(l2);
+
+    struct ListNode* mergedList = mergeTwoLists(l1, l2);
+
+    printf("Merged sorted list: ");
+    printList(mergedList);
+
+    return 0;
+}
