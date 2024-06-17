@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+bool isPalindrome(char* s, int start, int end) {
+    while (start < end) {
+        if (s[start] != s[end])
+            return false;
+        start++;
+        end--;
+    }
+    return true;
+}
+
+int maxPalindromicSubstrings(char* s, int k) {
+    int n = strlen(s);
+    bool** dp = (bool**)malloc(n * sizeof(bool*));
+    for (int i = 0; i < n; i++) {
+        dp[i] = (bool*)malloc(n * sizeof(bool));
+        memset(dp[i], 0, n * sizeof(bool));
+    }
+    for (int length = 1; length <= n; length++) {
+        for (int i = 0; i <= n - length; i++) {
+            int j = i + length - 1;
+            if (length == 1) {
+                dp[i][j] = true;
+            } else if (length == 2) {
+                dp[i][j] = (s[i] == s[j]);
+            } else {
+                dp[i][j] = (s[i] == s[j]) && dp[i+1][j-1];
+            }
+        }
+    }
+    int* dpMax = (int*)malloc((n + 1) * sizeof(int));
+    memset(dpMax, 0, (n + 1) * sizeof(int));
+
+    for (int i = 0; i < n; i++) {
+        dpMax[i+1] = dpMax[i];
+        for (int j = i; j >= 0; j--) {
+            if (i - j + 1 >= k && dp[j][i]) {
+                dpMax[i+1] = dpMax[j] + 1;
+                break;
+            }
+        }
+    }
+
+    int result = dpMax[n];
+
+    for (int i = 0; i < n; i++) {
+        free(dp[i]);
+    }
+    free(dp);
+    free(dpMax);
+
+    return result;
+}
+
+int main() {
+    char s[] = "abaccdsbbd";
+    int k = 2;
+    int result = maxPalindromicSubstrings(s, k);
+    printf("Maximum number of non-overlapping palindromic substrings of length at least %d: %d\n", k, result);
+
+    return 0;
+}
