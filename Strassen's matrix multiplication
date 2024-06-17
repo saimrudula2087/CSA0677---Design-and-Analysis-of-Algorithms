@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define SIZE 2
+void add(int A[SIZE][SIZE], int B[SIZE][SIZE], int C[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++)
+        for (int j = 0; j < SIZE; j++)
+            C[i][j] = A[i][j] + B[i][j];
+}
+
+void sub(int A[SIZE][SIZE], int B[SIZE][SIZE], int C[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++)
+        for (int j = 0; j < SIZE; j++)
+            C[i][j] = A[i][j] - B[i][j];
+}
+
+void strassen(int A[SIZE][SIZE], int B[SIZE][SIZE], int C[SIZE][SIZE]) {
+    int M1[SIZE][SIZE], M2[SIZE][SIZE], M3[SIZE][SIZE], M4[SIZE][SIZE], M5[SIZE][SIZE], M6[SIZE][SIZE], M7[SIZE][SIZE];
+    int temp1[SIZE][SIZE], temp2[SIZE][SIZE];
+    add(A, A + SIZE / 2, temp1);
+    add(B, B + SIZE / 2, temp2);
+    strassen(temp1, temp2, M1);
+    add(A + SIZE / 2, A + SIZE / 2 + SIZE / 2, temp1);
+    strassen(temp1, B, M2);
+    sub(B + SIZE / 2, B + SIZE / 2 + SIZE / 2, temp2);
+    strassen(A, temp2, M3);
+    sub(B + SIZE / 2 + SIZE / 2, B, temp2);
+    strassen(A + SIZE / 2 + SIZE / 2, temp2, M4);
+    add(A, A + SIZE / 2, temp1);
+    strassen(temp1, B + SIZE / 2 + SIZE / 2, M5);
+    sub(A + SIZE / 2, A, temp1);
+    add(B, B + SIZE / 2, temp2);
+    strassen(temp1, temp2, M6);
+    sub(A + SIZE / 2, A + SIZE / 2 + SIZE / 2, temp1);
+    add(B + SIZE / 2, B + SIZE / 2 + SIZE / 2, temp2);
+    strassen(temp1, temp2, M7);
+    add(M1, M4, temp1);
+    sub(temp1, M5, temp2);
+    add(temp2, M7, C);
+    add(M3, M5, C + SIZE / 2);
+    add(M2, M4, C + SIZE / 2 + SIZE);
+    sub(M1, M2, temp1);
+    add(temp1, M3, temp2);
+    add(temp2, M6, C + SIZE / 2 + SIZE / 2);
+}
+
+int main() {
+    int A[SIZE][SIZE] = {{1, 2}, {3, 4}};
+    int B[SIZE][SIZE] = {{5, 6}, {7, 8}};
+    int C[SIZE][SIZE];
+
+    strassen(A, B, C);
+
+    printf("Product of matrices A and B is:\n");
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            printf("%d ", C[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
