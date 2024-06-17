@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <string.h>
+#define MOD 1000000007
+int is_prime_digit(char c) {
+    return (c == '2' || c == '3' || c == '5' || c == '7');
+}
+
+int is_non_prime_digit(char c) {
+    return (c == '1' || c == '4' || c == '6' || c == '8' || c == '9');
+}
+
+int countBeautifulPartitions(char *s, int k, int minLength) {
+    int n = strlen(s);
+    int dp[n + 1][k + 1];
+    memset(dp, 0, sizeof(dp));
+    dp[0][0] = 1; // 1 way to partition an empty string with 0 partitions
+    
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= k; ++j) {
+            for (int start = i - minLength; start >= 0 && i - start >= minLength; --start) {
+                if (is_prime_digit(s[start]) && is_non_prime_digit(s[i - 1])) {
+                    dp[i][j] = (dp[i][j] + dp[start][j - 1]) % MOD;
+                }
+            }
+        }
+    }
+    
+    return dp[n][k];
+}
+
+int main() {
+    char s[] = "23542185131";
+    int k = 3;
+    int minLength = 2;
+    
+    int result = countBeautifulPartitions(s, k, minLength);
+    printf("Number of beautiful partitions: %d\n", result);
+    
+    return 0;
+}
