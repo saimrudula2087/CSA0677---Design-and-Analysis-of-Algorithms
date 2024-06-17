@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+};
+
+void findMinMax(struct TreeNode* root, int query, int* mini, int* maxi) {
+    if (root == NULL) {
+        *mini = -1;
+        *maxi = -1;
+        return;
+    }
+
+    if (root->val <= query) {
+        *mini = root->val;
+        findMinMax(root->right, query, mini, maxi);
+    } else {
+        findMinMax(root->left, query, mini, maxi);
+        *maxi = root->val;
+    }
+}
+
+int main() {
+  
+    struct TreeNode* root = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    root->val = 5;
+    root->left = NULL;
+    root->right = NULL;
+
+    int queries[] = {3, 7, 10};
+    int n = sizeof(queries) / sizeof(queries[0]);
+
+    for (int i = 0; i < n; i++) {
+        int mini = -1, maxi = -1;
+        findMinMax(root, queries[i], &mini, &maxi);
+        printf("[%d, %d]\n", mini, maxi);
+    }
+
+    free(root);
+    return 0;
+}
