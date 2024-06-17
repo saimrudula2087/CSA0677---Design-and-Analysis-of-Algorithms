@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <string.h>
+int minCharsToAppend(char* s, char* t) {
+    int lenS = strlen(s);
+    int lenT = strlen(t);
+    int j = 0; // Pointer for string t
+
+    for (int i = 0; i < lenS && j < lenT; i++) {
+        if (s[i] == t[j]) {
+            j++;
+        }
+    }
+
+    return lenT - j;
+}
+
+int main() {
+    char s1[] = "coaching";
+    char t1[] = "coding";
+    printf("Output: %d\n", minCharsToAppend(s1, t1)); // Output: 4
+
+    char s2[] = "abcde";
+    char t2[] = "a";
+    printf("Output: %d\n", minCharsToAppend(s2, t2)); // Output: 0
+
+    char s3[] = "z";
+    char t3[] = "abcde";
+    printf("Output: %d\n", minCharsToAppend(s3, t3)); // Output: 5
+
+    return 0;
+}
