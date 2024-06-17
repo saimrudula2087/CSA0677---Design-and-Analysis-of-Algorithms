@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int calculatePenalty(char *customers, int n) {
+    int penalty = 0;
+    int minPenalty = n; // Initialize with maximum possible penalty
+
+    for (int j = 0; j <= n; j++) {
+        penalty = 0;
+        for (int i = 0; i < n; i++) {
+            if ((i > j && customers[i] == 'Y') || (i <= j && customers[i] == 'N')) {
+                penalty++;
+            }
+        }
+        if (penalty < minPenalty) {
+            minPenalty = penalty;
+        }
+    }
+
+    return minPenalty;
+}
+
+int main() {
+    char customers[] = "YYYNNYYY";
+    int n = 7; // Number of hours
+
+    int minPenalty = calculatePenalty(customers, n);
+    printf("Minimum Penalty: %d\n", minPenalty);
+
+    return 0;
+}
