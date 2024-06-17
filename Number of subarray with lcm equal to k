@@ -1,0 +1,39 @@
+#include <stdio.h>
+int gcd(int a, int b) {
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+int lcm(int a, int b) {
+    return (a / gcd(a, b)) * b;
+}
+int countSubarraysWithLCM(int* nums, int numsSize, int k) {
+    int count = 0;
+    for (int i = 0; i < numsSize; i++) {
+        int currentLCM = 1;
+        for (int j = i; j < numsSize; j++) {
+            currentLCM = lcm(currentLCM, nums[j]);
+            if (currentLCM == k) {
+                count++;
+            }
+            if (currentLCM > k) {
+                break;  // No need to continue if LCM exceeds k
+            }
+        }
+    }
+    return count;
+}
+
+int main() {
+    int nums[] = {3, 6, 2, 7, 1};
+    int k = 6;
+    int numsSize = sizeof(nums) / sizeof(nums[0]);
+
+    int result = countSubarraysWithLCM(nums, numsSize, k);
+    printf("The number of subarrays with LCM equal to %d is: %d\n", k, result);
+
+    return 0;
+}
