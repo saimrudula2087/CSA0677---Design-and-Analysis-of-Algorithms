@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define INF 1e9
+#define MAXN 105
+int min(int a, int b) {
+    return a < b ? a : b;
+}
+
+int* minCostToBuyApples(int n, int roads[][3], int roadsSize, int* roadsColSize, int* appleCost, int appleCostSize, int k, int* returnSize) {
+    int* dist = (int*)malloc(n * sizeof(int));
+    *returnSize = n;
+
+    for (int i = 0; i < n; i++) {
+        dist[i] = INF;
+    }
+
+    dist[0] = 0;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < roadsSize; j++) {
+            int a = roads[j][0];
+            int b = roads[j][1];
+            int cost = roads[j][2];
+
+            dist[b] = min(dist[b], dist[a] + cost);
+            dist[a] = min(dist[a], dist[b] + cost);
+        }
+    }
+
+    int* answer = (int*)malloc(n * sizeof(int));
+
+    for (int i = 0; i < n; i++) {
+        answer[i] = appleCost[i] + dist[i] + k * dist[i];
+    }
+
+    return answer;
+}
+
+int main() {
+    int n = 3;
+    int roads[3][3] = {{0, 1, 2}, {1, 2, 3}, {2, 0, 4}};
+    int roadsSize = 3;
+    int roadsColSize = 3;
+    int appleCost[3] = {1, 2, 3};
+    int appleCostSize = 3;
+    int k = 2;
+    int returnSize;
+
+    int* result = minCostToBuyApples(n, roads, roadsSize, &roadsColSize, appleCost, appleCostSize, k, &returnSize);
+
+    printf("Minimum total cost to buy an apple in each city:\n");
+    for (int i = 0; i < returnSize; i++) {
+        printf("%d ", result[i]);
+    }
+
+    free(result);
+
+    return 0;
+}
