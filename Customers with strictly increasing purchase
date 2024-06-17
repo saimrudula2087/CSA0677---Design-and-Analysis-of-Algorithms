@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_CUSTOMERS 1000
+#define MAX_YEARS 100
+
+typedef struct {
+    int order_id;
+    int customer_id;
+    int order_date;
+    int price;
+} Order;
+
+typedef struct {
+    int year;
+    int total_purchases;
+} YearlyPurchase;
+
+typedef struct {
+    int customer_id;
+    YearlyPurchase yearly_purchases[MAX_YEARS];
+    int purchase_count;
+} CustomerPurchases;
+
+Order orders[] = {
+    {1, 1, 20200101, 100},
+    {2, 1, 20200201, 200},
+    {3, 1, 20210101, 300},
+    {4, 2, 20200301, 150},
+    {5, 2, 20210301, 250},
+    {6, 3, 20200201, 200},
+    {7, 3, 20210101, 100},
+    {8, 3, 20210201, 50},
+};
+int order_count = 8;
+
+void find_yearly_purchases(CustomerPurchases customer_purchases[], int *customer_count) {
+    int i, j;
+    for (i = 0; i < order_count; i++) {
+        int customer_id = orders[i].customer_id;
+        int order_year = orders[i].order_date / 10000;
+        int found = 0;
+
+        for (j = 0; j < *customer_count; j++) {
+            if (customer_purchases[j].customer_id == customer_id) {
+                found = 1;
+                break;
+            }
+        }
+
+        if (!found) {
+            customer_purchases[*customer_count].customer_id = customer_id;
+            customer_purchases[*customer_count].purchase_count = 0;
+            j = (*customer_count)++;
+        }
+
+        int k, year_found = 0;
+        for (k = 0; k < customer_purchases[j].purchase_count; k++) {
+            if (customer_purchases[j].yearly_purchases[k].year == order_year) {
+                customer_purchases[j].yearly_purchases[k].total_purchases += orders[i].price;
+                year_found = 1;
+                break;
+            }
+        }
+
+        if (!year_found) {
+            customer_purchases[j].yearly_purchases[customer_purchases[j].purchase_count].year = order_year;
+            customer_purchases[j].yearly_purchases[customer_purchases[j].purchase_count].total_purchases = orders[i].price;
+            customer_purchases[j].purchase_count++;
+        }
+    }
+}
+
+int is_strictly_increasing(CustomerPurchases *cp) {
+    int i;
+    for (i = 1; i < cp->purchase_count; i++) {
+        if (cp->yearly_purchases[i].total_purchases <= cp->yearly_purchases[i - 1].total_purchases) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int main() {
+    CustomerPurchases customer_purchases[MAX_CUSTOMERS];
+    int customer_count = 0;
+
+    find_yearly_purchases(customer_purchases, &customer_count);
+
+    printf("Customers with strictly increasing yearly purchases:\n");
+    for (int i = 0; i < customer_count; i++) {
+        if (is_strictly_increasing(&customer_purchases[i])) {
+            printf("Customer ID: %d\n", customer_purchases[i].customer_id);
+        }
+    }
+
+    return 0;
+}
