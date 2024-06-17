@@ -1,0 +1,26 @@
+#include <stdio.h>
+double* convertTemperature(double celsius) {
+    static double result[2];
+    
+    if (celsius < 0) {
+        printf("Error: Temperature cannot be negative.\n");
+        return NULL;
+    }
+    
+    result[0] = celsius + 273.15; // Kelvin
+    result[1] = celsius * 1.80 + 32.00; // Fahrenheit
+    
+    return result;
+}
+
+int main() {
+    double celsius = 25.0;
+    double* ans = convertTemperature(celsius);
+    
+    if (ans != NULL) {
+        printf("Temperature in Kelvin: %.2f\n", ans[0]);
+        printf("Temperature in Fahrenheit: %.2f\n", ans[1]);
+    }
+    
+    return 0;
+}
