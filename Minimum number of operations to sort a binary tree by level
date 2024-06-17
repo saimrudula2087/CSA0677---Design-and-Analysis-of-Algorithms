@@ -1,0 +1,105 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+};
+int minSwaps(int* arr, int n) {
+    struct Pair {
+        int value;
+        int index;
+    };
+    struct Pair* arrPos = (struct Pair*)malloc(n * sizeof(struct Pair));
+    for (int i = 0; i < n; i++) {
+        arrPos[i].value = arr[i];
+        arrPos[i].index = i;
+    }
+    int compare(const void* a, const void* b) {
+        return ((struct Pair*)a)->value - ((struct Pair*)b)->value;
+    }
+    qsort(arrPos, n, sizeof(struct Pair), compare);
+    int* visited = (int*)calloc(n, sizeof(int));
+    int swaps = 0;
+    for (int i = 0; i < n; i++) {
+        if (visited[i] || arrPos[i].index == i)
+            continue;
+        int cycle_size = 0;
+        int j = i;
+        while (!visited[j]) {
+            visited[j] = 1;
+            j = arrPos[j].index;
+            cycle_size++;
+        }
+        if (cycle_size > 1)
+            swaps += (cycle_size - 1);
+    }
+
+    free(arrPos);
+    free(visited);
+    return swaps;
+}
+void traverseTree(struct TreeNode* root, int levels[][1000], int* levelsSize) {
+    if (!root) return;
+
+    struct TreeNode* queue[10000];
+    int front = 0, rear = 0;
+
+    queue[rear++] = root;
+
+    while (front < rear) {
+        int levelSize = rear - front;
+        for (int i = 0; i < levelSize; i++) {
+            struct TreeNode* node = queue[front++];
+            levels[*levelsSize][i] = node->val;
+
+            if (node->left) queue[rear++] = node->left;
+            if (node->right) queue[rear++] = node->right;
+        }
+        (*levelsSize)++;
+    }
+}
+
+int minOperationsToSortTreeLevels(struct TreeNode* root) {
+    int levels[1000][1000];
+    int levelsSize = 0;
+
+    traverseTree(root, levels, &levelsSize);
+
+    int totalSwaps = 0;
+    for (int i = 0; i < levelsSize; i++) {
+        int n = 0;
+        while (levels[i][n] != 0) n++; // Find the size of the level
+        totalSwaps += minSwaps(levels[i], n);
+    }
+
+    return totalSwaps;
+}
+struct TreeNode* createTreeNode(int val) {
+    struct TreeNode* node = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    node->val = val;
+    node->left = node->right = NULL;
+    return node;
+}
+
+int main() {
+    struct TreeNode* root = createTreeNode(1);
+    root->left = createTreeNode(4);
+    root->right = createTreeNode(3);
+    root->left->left = createTreeNode(7);
+    root->left->right = createTreeNode(6);
+    root->right->left = createTreeNode(8);
+    root->right->right = createTreeNode(5);
+    root->left->left->left = NULL;
+    root->left->left->right = NULL;
+    root->left->right->left = NULL;
+    root->left->right->right = NULL;
+    root->right->left->left = createTreeNode(9);
+    root->right->left->right = NULL;
+    root->right->right->left = createTreeNode(10);
+    root->right->right->right = NULL;
+
+    int result = minOperationsToSortTreeLevels(root);
+    printf("Minimum number of operations: %d\n", result);
+    return 0;
+}
