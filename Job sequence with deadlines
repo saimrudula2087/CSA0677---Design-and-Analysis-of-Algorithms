@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int id;
+    int deadline;
+    int profit;
+} Job;
+
+int compare(const void* a, const void* b) {
+    Job* j1 = (Job*)a;
+    Job* j2 = (Job*)b;
+    return j2->profit - j1->profit;
+}
+
+int findMaxDeadline(Job arr[], int n) {
+    int max = arr[0].deadline;
+    for (int i = 1; i < n; i++)
+        if (arr[i].deadline > max)
+            max = arr[i].deadline;
+    return max;
+}
+
+void printJobScheduling(Job arr[], int n) {
+    qsort(arr, n, sizeof(Job), compare);
+    int maxDeadline = findMaxDeadline(arr, n);
+    int result[maxDeadline];
+    int slot[maxDeadline];
+
+    for (int i = 0; i < maxDeadline; i++)
+        slot[i] = 0;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = arr[i].deadline - 1; j >= 0; j--) {
+            if (slot[j] == 0) {
+                result[j] = i;
+                slot[j] = 1;
+                break;
+            }
+        }
+    }
+
+    for (int i = 0; i < maxDeadline; i++)
+        if (slot[i])
+            printf("Job %d ", arr[result[i]].id);
+}
+
+int main() {
+    Job arr[] = {{1, 2, 100}, {2, 1, 19}, {3, 2, 27}, {4, 1, 25}, {5, 3, 15}};
+    int n = sizeof(arr)/sizeof(arr[0]);
+    printf("Following is the sequence of jobs:\n");
+    printJobScheduling(arr, n);
+    return 0;
+}
