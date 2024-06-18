@@ -1,0 +1,25 @@
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+    char s[10]="abcd";
+    char s1[10]="cdabcdab";
+    int l=strlen(s);
+    int l1=strlen(s1);
+    int i,j,count=0;
+    for(i=0;i<l;i++)
+    {
+        if(s[i]=='a')
+        {
+            count=count+1;
+        }
+    }
+    for(j=0;j<l1;j++)
+    {
+        if(s1[j]=='a')
+        {
+            count=count+1;
+        }
+    }
+    printf("%d",count);
+}
