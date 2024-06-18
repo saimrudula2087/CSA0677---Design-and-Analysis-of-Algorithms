@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+void containerLoading(int weights[], int n, int capacity) {
+    int currentWeight = 0;
+
+    for (int i = 0; i < n; i++) {
+        if (currentWeight + weights[i] <= capacity) {
+            currentWeight += weights[i];
+            printf("Loaded item of weight: %d\n", weights[i]);
+        } else {
+            printf("Cannot load item of weight: %d\n", weights[i]);
+        }
+    }
+}
+
+int main() {
+    int weights[] = {10, 20, 30, 40, 50};
+    int n = sizeof(weights)/sizeof(weights[0]);
+    int capacity = 100;
+
+    printf("Container loading with capacity %d:\n", capacity);
+    containerLoading(weights, n, capacity);
+    return 0;
+}
