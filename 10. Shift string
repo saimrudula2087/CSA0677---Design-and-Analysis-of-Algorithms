@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <string.h>
+
+void shiftString(char *s, int shift[][2], int shiftSize, int sSize) {
+    int totalShift = 0;
+    
+    for (int i = 0; i < shiftSize; i++) {
+        if (shift[i][0] == 0) {
+            totalShift -= shift[i][1];
+        } else {
+            totalShift += shift[i][1];
+        }
+    }
+    
+    totalShift %= sSize;
+    
+    if (totalShift < 0) {
+        totalShift += sSize;
+    }
+    
+    char temp[sSize + 1];
+    strcpy(temp, s);
+    
+    for (int i = 0; i < sSize; i++) {
+        s[(i + totalShift) % sSize] = temp[i];
+    }
+}
+
+int main() {
+    char s[] = "abc";
+    int shift[][2] = {{0, 1}, {1, 2}};
+    int shiftSize = 2;
+    int sSize = strlen(s);
+    
+    shiftString(s, shift, shiftSize, sSize);
+    
+    printf("Output: %s\n", s);
+    
+    return 0;
+}
