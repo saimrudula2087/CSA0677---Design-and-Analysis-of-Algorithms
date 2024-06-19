@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <limits.h>
+#define MAX_SIZE 100000
+typedef struct {
+    int* queue;
+    int front;
+    int rear;
+    int capacity;
+    int* freq;
+} FirstUnique;
+
+FirstUnique* firstUniqueCreate(int* nums, int numsSize) {
+    FirstUnique* obj = (FirstUnique*)malloc(sizeof(FirstUnique));
+    obj->queue = (int*)malloc(MAX_SIZE * sizeof(int));
+    obj->front = 0;
+    obj->rear = -1;
+    obj->capacity = MAX_SIZE;
+    obj->freq = (int*)calloc(MAX_SIZE + 1, sizeof(int)); // Initialize frequency array
+
+    for (int i = 0; i < numsSize; i++) {
+        obj->freq[nums[i]]++;
+        obj->queue[++obj->rear] = nums[i];
+    }
+
+    return obj;
+}
+
+int firstUniqueShowFirstUnique(FirstUnique* obj) {
+    while (obj->front <= obj->rear && obj->freq[obj->queue[obj->front]] > 1) {
+        obj->front++;
+    }
+
+    if (obj->front <= obj->rear) {
+        return obj->queue[obj->front];
+    }
+
+    return -1;
+}
+
+void firstUniqueAdd(FirstUnique* obj, int value) {
+    obj->freq[value]++;
+    obj->queue[++obj->rear] = value;
+}
+
+void firstUniqueFree(FirstUnique* obj) {
+    free(obj->queue);
+    free(obj->freq);
+    free(obj);
+}
+
+int main() {
+    int nums1[] = {2, 3, 5};
+    int nums1Size = sizeof(nums1) / sizeof(nums1[0]);
+
+    FirstUnique* obj = firstUniqueCreate(nums1, nums1Size);
+    printf("showFirstUnique: %d\n", firstUniqueShowFirstUnique(obj)); 
+
+    firstUniqueAdd(obj, 5);
+    printf("showFirstUnique: %d\n", firstUniqueShowFirstUnique(obj));
+
+    firstUniqueAdd(obj, 2); 
+    printf("showFirstUnique: %d\n", firstUniqueShowFirstUnique(obj)); 
+
+    firstUniqueAdd(obj, 3); 
+    printf("showFirstUnique: %d\n", firstUniqueShowFirstUnique(obj));
+
+    firstUniqueFree(obj);
+
+    return 0;
+}
