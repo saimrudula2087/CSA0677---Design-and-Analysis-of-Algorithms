@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MOD 1000000007
+int numberWays(int** hats, int hatsSize, int* hatsColSize) {
+    int maxHat = 40;
+    int n = hatsSize;
+    int* hatToPeople[maxHat + 1];
+    int hatCounts[maxHat + 1];
+    memset(hatCounts, 0, sizeof(hatCounts));
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < hatsColSize[i]; j++) {
+            int hat = hats[i][j];
+            hatCounts[hat]++;
+        }
+    }
+
+    for (int i = 0; i <= maxHat; i++) {
+        hatToPeople[i] = (int*)malloc(hatCounts[i] * sizeof(int));
+        hatCounts[i] = 0;  
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < hatsColSize[i]; j++) {
+            int hat = hats[i][j];
+            hatToPeople[hat][hatCounts[hat]++] = i;
+        }
+    }
+
+    int* dp = (int*)calloc(1 << n, sizeof(int));
+    dp[0] = 1;
+    for (int hat = 1; hat <= maxHat; hat++) {
+        if (hatCounts[hat] == 0) continue;
+        for (int mask = (1 << n) - 1; mask >= 0; mask--) {
+            for (int i = 0; i < hatCounts[hat]; i++) {
+                int person = hatToPeople[hat][i];
+                if (mask & (1 << person)) continue;
+                dp[mask | (1 << person)] = (dp[mask | (1 << person)] + dp[mask]) % MOD;
+            }
+        }
+    }
+
+    int result = dp[(1 << n) - 1];
+    free(dp);
+    for (int i = 0; i <= maxHat; i++) {
+        free(hatToPeople[i]);
+    }
+    return result;
+}
+
+int main() {
+    int n = 3;
+    int* hats[] = {
+        (int[]){3, 4},
+        (int[]){4, 5},
+        (int[]){5}
+    };
+    int hatsColSize[] = {2, 2, 1};
+    int hatsSize = sizeof(hats) / sizeof(hats[0]);
+
+    int result = numberWays(hats, hatsSize, hatsColSize);
+    printf("Number of ways: %d\n", result);
+
+    return 0;
+}
