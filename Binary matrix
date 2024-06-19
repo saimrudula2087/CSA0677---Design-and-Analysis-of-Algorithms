@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct {
+    int** mat;
+    int rows;
+    int cols;
+} BinaryMatrix;
+
+int BinaryMatrix_get(BinaryMatrix* bm, int row, int col) {
+    return bm->mat[row][col];
+}
+
+void BinaryMatrix_dimensions(BinaryMatrix* bm, int* rows, int* cols) {
+    *rows = bm->rows;
+    *cols = bm->cols;
+}
+int leftMostColumnWithOne(BinaryMatrix* bm) {
+    int rows, cols;
+    BinaryMatrix_dimensions(bm, &rows, &cols);
+
+    int row = 0;
+    int col = cols - 1;
+    int leftmost = -1;
+
+    while (row < rows && col >= 0) {
+        if (BinaryMatrix_get(bm, row, col) == 1) {
+            leftmost = col;
+            col--;  // Move left
+        } else {
+            row++;  // Move down
+        }
+    }
+
+    return leftmost;
+}
+BinaryMatrix* createBinaryMatrix(int** mat, int rows, int cols) {
+    BinaryMatrix* bm = (BinaryMatrix*)malloc(sizeof(BinaryMatrix));
+    bm->mat = mat;
+    bm->rows = rows;
+    bm->cols = cols;
+    return bm;
+}
+
+int main() {
+    int rows = 4, cols = 5;
+    int mat[4][5] = {
+        {0, 0, 0, 1, 1},
+        {0, 0, 1, 1, 1},
+        {0, 1, 1, 1, 1},
+        {0, 0, 0, 0, 1}
+    };
+    int* matPtrs[4];
+    for (int i = 0; i < rows; ++i) {
+        matPtrs[i] = mat[i];
+    }
+
+    BinaryMatrix* bm = createBinaryMatrix(matPtrs, rows, cols);
+    int result = leftMostColumnWithOne(bm);
+
+    printf("Leftmost column with at least one 1: %d\n", result);
+
+    free(bm);
+    return 0;
+}
