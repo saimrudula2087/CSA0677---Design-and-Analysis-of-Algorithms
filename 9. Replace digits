@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+int replaceDigit(int num, int x, int y) {
+    char str[12];
+    sprintf(str, "%d", num);
+
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] == '0' + x) {
+            str[i] = '0' + y;
+        }
+    }
+    
+    int newNum = atoi(str);
+  
+    if (newNum == 0 || (str[0] == '0' && strlen(str) > 1)) {
+        return -1;
+    }
+    return newNum;
+}
+
+int maxDifference(int num) {
+    int maxDiff = 0;
+
+    for (int x = 0; x <= 9; x++) {
+        for (int y = 0; y <= 9; y++) {
+            if (y != x) {
+                int a = replaceDigit(num, x, y);
+                if (a == -1) continue;
+                for (int x2 = 0; x2 <= 9; x2++) {
+                    for (int y2 = 0; y2 <= 9; y2++) {
+                        if (y2 != x2) {
+                            int b = replaceDigit(num, x2, y2);
+                            if (b == -1) continue;
+                            int diff = abs(a - b);
+                            if (diff > maxDiff) {
+                                maxDiff = diff;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    return maxDiff;
+}
+
+int main() {
+    int num = 555;
+    int result = maxDifference(num);
+    printf("Maximum difference: %d\n", result);
+    return 0;
+}
