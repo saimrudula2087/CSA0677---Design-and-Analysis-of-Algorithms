@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+bool dictionaryContains(char* word) {
+    char dictionary[][10] = {"mobile", "samsung", "sam", "sung", "man", "mango",
+                             "icecream", "and", "go", "i", "like", "ice", "cream"};
+    int size = sizeof(dictionary) / sizeof(dictionary[0]);
+    for (int i = 0; i < size; i++)
+        if (strcmp(dictionary[i], word) == 0)
+            return true;
+    return false;
+}
+bool wordBreak(char* str) {
+    int size = strlen(str);
+    if (size == 0) return true;
+
+    bool dp[size + 1];
+    memset(dp, 0, sizeof(dp));
+
+    for (int i = 1; i <= size; i++) {
+        if (!dp[i] && dictionaryContains(strndup(str, i)))
+            dp[i] = true;
+
+        if (dp[i]) {
+            if (i == size)
+                return true;
+
+            for (int j = i + 1; j <= size; j++) {
+                if (!dp[j] && dictionaryContains(strndup(str + i, j - i)))
+                    dp[j] = true;
+
+                if (j == size && dp[j])
+                    return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+int main() {
+    char str[] = "ilikesamsung";
+    if (wordBreak(str))
+        printf("Yes\n");
+    else
+        printf("No\n");
+    return 0;
+}
