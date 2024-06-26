@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <string.h>
+#define MOD 1000000007
+int dp[501][51][2][2]; 
+char s1[501], s2[501], evil[51];
+int lenS1, lenS2, lenEvil;
+
+int kmp[51];
+void computeKMP() {
+    int i = 0, j = -1;
+    kmp[0] = -1;
+    while (i < lenEvil) {
+        while (j >= 0 && evil[i] != evil[j]) j = kmp[j];
+        i++; j++;
+        kmp[i] = j;
+    }
+}
+int countGoodStrings(int pos, int evil_count, int is_prefix1, int is_prefix2) {
+    if (evil_count == lenEvil) return 0; 
+    if (pos == lenS1) return 1;
+
+    if (dp[pos][evil_count][is_prefix1][is_prefix2] != -1)
+        return dp[pos][evil_count][is_prefix1][is_prefix2];
+
+    int start = is_prefix1 ? s1[pos] : 'a';
+    int end = is_prefix2 ? s2[pos] : 'z';
+    long long res = 0;
+
+    for (char ch = start; ch <= end; ch++) {
+        int next_evil_count = evil_count;
+        while (next_evil_count >= 0 && evil[next_evil_count] != ch)
+            next_evil_count = kmp[next_evil_count];
+        next_evil_count++;
+        res += countGoodStrings(pos + 1, next_evil_count, is_prefix1 && (ch == start), is_prefix2 && (ch == end));
+        res %= MOD;
+    }
+
+    dp[pos][evil_count][is_prefix1][is_prefix2] = res;
+    return res;
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+    scanf("%s %s %s", s1, s2, evil);
+
+    lenS1 = strlen(s1);
+    lenS2 = strlen(s2);
+    lenEvil = strlen(evil);
+
+    memset(dp, -1, sizeof(dp));
+    computeKMP();
+
+    int result = countGoodStrings(0, 0, 1, 1);
+    printf("%d\n", result);
+
+    return 0;
+}
