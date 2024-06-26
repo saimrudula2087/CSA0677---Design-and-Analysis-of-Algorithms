@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <string.h>
+int repeatedStringMatch(char* a, char* b) {
+    int lenA = strlen(a);
+    int lenB = strlen(b);
+    int repetitions = 1;
+    char* repeatedA = strdup(a);
+
+    while (strlen(repeatedA) < lenB) {
+        strcat(repeatedA, a);
+        repetitions++;
+    }
+    if (strstr(repeatedA, b) != NULL) {
+        return repetitions;
+    }
+    strcat(repeatedA, a);
+    repetitions++;
+
+    if (strstr(repeatedA, b) != NULL) {
+        return repetitions;
+    }
+    return -1;
+}
+
+int main() {
+    char a[] = "abcd";
+    char b[] = "cdabcdab";
+
+    int result = repeatedStringMatch(a, b);
+    printf("Output: %d\n", result);
+
+    return 0;
+}
