@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+void sortString(char *str) {
+    int n = strlen(str);
+    for (int i = 0; i < n-1; i++) {
+        for (int j = i+1; j < n; j++) {
+            if (str[i] > str[j]) {
+                char temp = str[i];
+                str[i] = str[j];
+                str[j] = temp;
+            }
+        }
+    }
+}
+int areAnagrams(char *str1, char *str2) {
+    char sorted1[100], sorted2[100];
+    strcpy(sorted1, str1);
+    strcpy(sorted2, str2);
+    sortString(sorted1);
+    sortString(sorted2);
+    return strcmp(sorted1, sorted2) == 0;
+}
+void groupAnagrams(char *strs[], int size) {
+    int *visited = (int *)calloc(size, sizeof(int));
+
+    for (int i = 0; i < size; i++) {
+        if (visited[i]) continue;
+
+        printf("[");
+        printf("\"%s\"", strs[i]);
+        visited[i] = 1;
+
+        for (int j = i + 1; j < size; j++) {
+            if (!visited[j] && areAnagrams(strs[i], strs[j])) {
+                printf(", \"%s\"", strs[j]);
+                visited[j] = 1;
+            }
+        }
+        printf("]\n");
+    }
+
+    free(visited);
+}
+
+int main() {
+    char *strs1[] = {"eat", "tea", "tan", "ate", "nat", "bat"};
+    int size1 = sizeof(strs1) / sizeof(strs1[0]);
+    printf("Example 1:\n");
+    groupAnagrams(strs1, size1);
+
+    char *strs2[] = {""};
+    int size2 = sizeof(strs2) / sizeof(strs2[0]);
+    printf("Example 2:\n");
+    groupAnagrams(strs2, size2);
+
+    return 0;
+}
