@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <string.h>
+int isSubstring(char* a, char* b) {
+    return strstr(a, b) != NULL;
+}
+int minRepeats(char* a, char* b) {
+    int len_a = strlen(a);
+    int len_b = strlen(b);
+    char* repeated = (char*)malloc((len_a * (len_b / len_a + 2) + 1) * sizeof(char));
+    repeated[0] = '\0';
+
+    int count = 0;
+    while (strlen(repeated) < len_b) {
+        strcat(repeated, a);
+        count++;
+    }
+
+    if (isSubstring(repeated, b)) {
+        free(repeated);
+        return count;
+    }
+
+    strcat(repeated, a);
+    count++;
+    if (isSubstring(repeated, b)) {
+        free(repeated);
+        return count;
+    }
+
+    free(repeated);
+    return -1;
+}
+
+int main() {
+    char a[] = "abcd";
+    char b[] = "cdabcdab";
+
+    int result = minRepeats(a, b);
+    printf("The minimum number of times to repeat a to make b a substring is: %d\n", result);
+
+    return 0;
+}
