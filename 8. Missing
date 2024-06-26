@@ -1,0 +1,19 @@
+#include <stdio.h>
+int findMissingNumber(int* nums, int numsSize) {
+    int total = numsSize * (numsSize + 1) / 2; 
+    int sum = 0;
+    for (int i = 0; i < numsSize; i++) {
+        sum += nums[i];
+    }
+    return total - sum;
+}
+
+int main() {
+    int nums[] = {3, 0, 1};
+    int numsSize = sizeof(nums) / sizeof(nums[0]);
+
+    int missingNumber = findMissingNumber(nums, numsSize);
+    printf("The missing number is: %d\n", missingNumber);
+
+    return 0;
+}
