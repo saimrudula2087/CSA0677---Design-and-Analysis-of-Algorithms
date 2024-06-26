@@ -1,0 +1,16 @@
+#include <stdio.h>
+
+int minLengthAfterOperations(int* nums, int numsSize) {
+    int pairs = numsSize / 2;
+    return numsSize - pairs * 2;
+}
+
+int main() {
+    int nums[] = {1, 2, 3, 4};
+    int numsSize = sizeof(nums) / sizeof(nums[0]);
+    
+    int result = minLengthAfterOperations(nums, numsSize);
+    printf("The minimum length of nums after operations is: %d\n", result); 
+
+    return 0;
+}
