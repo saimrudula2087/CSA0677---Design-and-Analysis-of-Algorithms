@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int min(int a, int b) {
+    return a < b ? a : b;
+}
+
+void updateMatrix(int** mat, int matSize, int* matColSize, int** dist, int row, int col) {
+    int dirs[4][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    int minDist = matSize + *matColSize; 
+
+    for (int i = 0; i < 4; i++) {
+        int newRow = row + dirs[i][0];
+        int newCol = col + dirs[i][1];
+
+        if (newRow >= 0 && newRow < matSize && newCol >= 0 && newCol < *matColSize) {
+            minDist = min(minDist, dist[newRow][newCol] + 1);
+        }
+    }
+
+    dist[row][col] = minDist;
+}
+int** updateMatrix(int** mat, int matSize, int* matColSize, int* returnSize, int** returnColumnSizes) {
+    int** dist = (int*)malloc(matSize * sizeof(int));
+    *returnSize = matSize;
+    returnColumnSizes = (int)malloc(matSize * sizeof(int));
+
+    for (int i = 0; i < matSize; i++) {
+        dist[i] = (int*)malloc(*matColSize * sizeof(int));
+        (*returnColumnSizes)[i] = *matColSize;
+        for (int j = 0; j < *matColSize; j++) {
+            if (mat[i][j] == 0) {
+                dist[i][j] = 0;
+            } else {
+                dist[i][j] = matSize + *matColSize; 
+            }
+        }
+    }
+
+    for (int i = 0; i < matSize; i++) {
+        for (int j = 0; j < *matColSize; j++) {
+            updateMatrix(mat, matSize, matColSize, dist, i, j);
+        }
+    }
+
+    return dist;
+}
+int main() {
+    int mat1[][3] = {{0, 0, 0}, {0, 1, 0}, {0, 0, 0}};
+    int matSize1 = 3;
+    int matColSize1 = 3;
+
+    int** mat1Ptr = (int*)malloc(matSize1 * sizeof(int));
+    for (int i = 0; i < matSize1; i++) {
+        mat1Ptr[i] = mat1[i];
+    }
+
+    int returnSize1;
+    int* returnColumnSizes1;
+    int** result1 = updateMatrix(mat1Ptr, matSize1, &matColSize1, &returnSize1, &returnColumnSizes1);
+
+    printf("Output:\n");
+    for (int i = 0; i < returnSize1; i++) {
+        printf("[");
+        for (int j = 0; j < returnColumnSizes1[i]; j++) {
+            printf("%d", result1[i][j]);
+            if (j < returnColumnSizes1[i] - 1) {
+                printf(",");
+            }
+        }
+        printf("]\n");
+    }
+
+    for (int i = 0; i < matSize1; i++) {
+        free(result1[i]);
+    }
+    free(result1);
+    free(returnColumnSizes1);
+
+    return 0;
+}
