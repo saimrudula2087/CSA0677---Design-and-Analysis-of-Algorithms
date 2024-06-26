@@ -1,0 +1,41 @@
+#include <stdio.h>
+int findKthLargest(int* nums, int numsSize, int k) {
+    if (nums == NULL || numsSize < k) {
+        printf("Invalid input or k is out of bounds.\n");
+        return -1; // Error code for invalid input
+    }
+
+    int max, i, j;
+    for (i = 0; i < k; i++) {
+        max = nums[0];
+        for (j = 1; j < numsSize; j++) {
+            if (nums[j] > max) {
+                max = nums[j];
+            }
+        }
+
+        for (j = 0; j < numsSize; j++) {
+            if (nums[j] == max) {
+                nums[j] = nums[numsSize - 1];
+                numsSize--;
+                break;
+            }
+        }
+    }
+
+    return max;
+}
+
+int main() {
+    int nums1[] = {3, 2, 1, 5, 6, 4};
+    int k1 = 2;
+    int result1 = findKthLargest(nums1, 6, k1);
+    printf("Output for Example 1: %d\n", result1);
+
+    int nums2[] = {3, 2, 3, 1, 2, 4, 5, 5, 6};
+    int k2 = 4;
+    int result2 = findKthLargest(nums2, 9, k2);
+    printf("Output for Example 2: %d\n", result2);
+
+    return 0;
+}
