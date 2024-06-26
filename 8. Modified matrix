@@ -1,0 +1,43 @@
+#include <stdio.h>
+#define ROWS 3
+#define COLS 3
+void setZeroes(int matrix[ROWS][COLS]) {
+    int rows[ROWS] = {0};
+    int cols[COLS] = {0};
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            if (matrix[i][j] == 0) {
+                rows[i] = 1;
+                cols[j] = 1;
+            }
+        }
+    }
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            if (rows[i] == 1 || cols[j] == 1) {
+                matrix[i][j] = 0;
+            }
+        }
+    }
+}
+
+int main() {
+    int matrix[ROWS][COLS] = {{1, 1, 1}, {1, 0, 1}, {1, 1, 1}};
+    printf("Original Matrix:\n");
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+    setZeroes(matrix);
+    printf("\nModified Matrix:\n");
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
