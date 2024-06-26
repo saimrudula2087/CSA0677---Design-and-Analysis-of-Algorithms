@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct ListNode {
+    int val;
+    struct ListNode *next;
+};
+
+struct ListNode* mergeTwoLists(struct ListNode* l1, struct ListNode* l2) {
+    if (l1 == NULL) return l2;
+    if (l2 == NULL) return l1;
+
+    struct ListNode* mergedList;
+
+    if (l1->val < l2->val) {
+        mergedList = l1;
+        mergedList->next = mergeTwoLists(l1->next, l2);
+    } else {
+        mergedList = l2;
+        mergedList->next = mergeTwoLists(l1, l2->next);
+    }
+
+    return mergedList;
+}
+
+struct ListNode* mergeKLists(struct ListNode** lists, int listsSize) {
+    if (listsSize == 0) return NULL;
+
+    int interval = 1;
+    while (interval < listsSize) {
+        for (int i = 0; i < listsSize - interval; i += interval * 2) {
+            lists[i] = mergeTwoLists(lists[i], lists[i + interval]);
+        }
+        interval *= 2;
+    }
+
+    return lists[0];
+}
+void printList(struct ListNode* head) {
+    while (head != NULL) {
+        printf("%d ", head->val);
+        head = head->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    struct ListNode* list1 = (struct ListNode*)malloc(sizeof(struct ListNode));
+    list1->val = 1;
+    list1->next = (struct ListNode*)malloc(sizeof(struct ListNode));
+    list1->next->val = 4;
+    list1->next->next = (struct ListNode*)malloc(sizeof(struct ListNode));
+    list1->next->next->val = 5;
+    list1->next->next->next = NULL;
+
+    struct ListNode* list2 = (struct ListNode*)malloc(sizeof(struct ListNode));
+    list2->val = 1;
+    list2->next = (struct ListNode*)malloc(sizeof(struct ListNode));
+    list2->next->val = 3;
+    list2->next->next = (struct ListNode*)malloc(sizeof(struct ListNode));
+    list2->next->next->val = 4;
+    list2->next->next->next = NULL;
+
+    struct ListNode* list3 = (struct ListNode*)malloc(sizeof(struct ListNode));
+    list3->val = 2;
+    list3->next = (struct ListNode*)malloc(sizeof(struct ListNode));
+    list3->next->val = 6;
+    list3->next->next = NULL;
+
+    struct ListNode* lists[3] = {list1, list2, list3};
+
+    struct ListNode* mergedList = mergeKLists(lists, 3);
+
+    printf("Merged List: ");
+    printList(mergedList);
+
+    return 0;
+}
