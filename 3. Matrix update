@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+int directions[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+int isValid(int x, int y, int rows, int cols) {
+    return x >= 0 && x < rows && y >= 0 && y < cols;
+}
+void updateMatrix(int** mat, int matSize, int* matColSize, int** result) {
+    int rows = matSize;
+    int cols = matColSize[0];
+        for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            result[i][j] = INT_MAX;
+        }
+    }
+    int queue[rows * cols][2];
+    int front = 0, rear = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (mat[i][j] == 0) {
+                result[i][j] = 0;
+                queue[rear][0] = i;
+                queue[rear][1] = j;
+                rear++;
+            }
+        }
+    }
+    while (front < rear) {
+        int x = queue[front][0];
+        int y = queue[front][1];
+        front++;
+
+        for (int k = 0; k < 4; k++) {
+            int newX = x + directions[k][0];
+            int newY = y + directions[k][1];
+
+            if (isValid(newX, newY, rows, cols) && result[newX][newY] > result[x][y] + 1) {
+                result[newX][newY] = result[x][y] + 1;
+                queue[rear][0] = newX;
+                queue[rear][1] = newY;
+                rear++;
+            }
+        }
+    }
+}
+void printMatrix(int** matrix, int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int mat1[3][3] = {{0, 0, 0}, {0, 1, 0}, {0, 0, 0}};
+    int mat2[3][3] = {{0, 0, 0}, {0, 1, 0}, {1, 1, 1}};
+    int* mat1Ptr[3] = {mat1[0], mat1[1], mat1[2]};
+    int* mat2Ptr[3] = {mat2[0], mat2[1], mat2[2]};
+    int matColSize[3] = {3, 3, 3};
+
+    int result1[3][3];
+    int result2[3][3];
+    int* result1Ptr[3] = {result1[0], result1[1], result1[2]};
+    int* result2Ptr[3] = {result2[0], result2[1], result2[2]};
+
+    updateMatrix(mat1Ptr, 3, matColSize, result1Ptr);
+    updateMatrix(mat2Ptr, 3, matColSize, result2Ptr);
+
+    printf("Output for mat1:\n");
+    printMatrix(result1Ptr, 3, 3);
+
+    printf("Output for mat2:\n");
+    printMatrix(result2Ptr, 3, 3);
+
+    return 0;
+}
