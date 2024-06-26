@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+bool findPair(int nums[], int size, int indexDiff, int valueDiff) {
+    for (int i = 0; i < size; i++) {
+        for (int j = i + 1; j < size; j++) {
+            if (i != j && abs(i - j) <= indexDiff && abs(nums[i] - nums[j]) <= valueDiff) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+int main() {
+    int nums[] = {1, 2, 3, 1};
+    int indexDiff = 3;
+    int valueDiff = 0;
+    int size = sizeof(nums) / sizeof(nums[0]);
+
+    if (findPair(nums, size, indexDiff, valueDiff)) {
+        printf("Output: true\n");
+        printf("Explanation: We can choose (i, j) = (0, 3).\n");
+        printf("We satisfy the three conditions:\n");
+        printf("i != j --> 0 != 3\n");
+        printf("abs(i - j) <= indexDiff --> abs(0 - 3) <= 3\n");
+        printf("abs(nums[i] - nums[j]) <= valueDiff --> abs(1 - 1) <= 0\n");
+    } else {
+        printf("Output: false\n");
+    }
+
+    return 0;
+}
