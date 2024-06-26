@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <string.h>
+int countPrefixWords(char** words, int wordsSize, char* pref) {
+    int count = 0;
+    int prefLen = strlen(pref);
+
+    for (int i = 0; i < wordsSize; i++) {
+        if (strncmp(words[i], pref, prefLen) == 0) {
+            count++;
+        }
+    }
+
+    return count;
+}
+
+int main() {
+    char* words[] = {"pay", "attention", "practice", "attend"};
+    int wordsSize = sizeof(words) / sizeof(words[0]);
+    char* pref = "at";
+
+    int result = countPrefixWords(words, wordsSize, pref);
+    printf("Output: %d\n", result);
+
+    return 0;
+}
