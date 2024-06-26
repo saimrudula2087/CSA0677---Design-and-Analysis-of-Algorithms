@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_WORDS 100
+#define MAX_WORD_LENGTH 100
+
+int isSubstring(const char* word, const char* sub) {
+    return strstr(word, sub) != NULL;
+}
+
+void findSubstrings(char words[][MAX_WORD_LENGTH], int wordsSize, char result[][MAX_WORD_LENGTH], int* resultSize) {
+    *resultSize = 0;
+    
+    for (int i = 0; i < wordsSize; i++) {
+        for (int j = 0; j < wordsSize; j++) {
+            if (i != j && isSubstring(words[j], words[i])) {
+                strcpy(result[*resultSize], words[i]);
+                (*resultSize)++;
+                break;
+            }
+        }
+    }
+}
+
+int main() {
+    char words[MAX_WORDS][MAX_WORD_LENGTH] = {"mass", "as", "hero", "superhero"};
+    int wordsSize = 4;
+    char result[MAX_WORDS][MAX_WORD_LENGTH];
+    int resultSize;
+
+    findSubstrings(words, wordsSize, result, &resultSize);
+
+    printf("Substrings found:\n");
+    for (int i = 0; i < resultSize; i++) {
+        printf("%s\n", result[i]);
+    }
+
+    return 0;
+}
