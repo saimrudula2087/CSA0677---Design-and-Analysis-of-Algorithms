@@ -1,0 +1,27 @@
+#include <stdio.h>
+int countPairs(int nums1[], int nums2[], int n, int diff) {
+    int count = 0;
+    
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (nums1[i] - nums1[j] <= nums2[i] - nums2[j] + diff) {
+                count++;
+            }
+        }
+    }
+    
+    return count;
+}
+
+int main() {
+    int nums1[] = {3, 2, 5};
+    int nums2[] = {2, 2, 1};
+    int n = 3;
+    int diff = 1;
+    
+    int result = countPairs(nums1, nums2, n, diff);
+    
+    printf("Number of pairs that satisfy the conditions: %d\n", result);
+    
+    return 0;
+}
