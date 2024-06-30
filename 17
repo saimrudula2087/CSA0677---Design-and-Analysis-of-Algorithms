@@ -1,0 +1,27 @@
+#include <stdio.h>
+double champagneTower(int poured, int query_row, int query_glass) {
+    double dp[101][101] = {0.0};
+    dp[0][0] = poured;
+
+    for (int i = 0; i <= query_row; i++) {
+        for (int j = 0; j <= i; j++) {
+            if (dp[i][j] >= 1) {
+                dp[i + 1][j] += (dp[i][j] - 1) / 2.0;
+                dp[i + 1][j + 1] += (dp[i][j] - 1) / 2.0;
+                dp[i][j] = 1;
+            }
+        }
+    }
+
+    return dp[query_row][query_glass];
+}
+
+int main() {
+    int poured1 = 1, query_row1 = 1, query_glass1 = 1;
+    printf("%.5f\n", champagneTower(poured1, query_row1, query_glass1));
+
+    int poured2 = 2, query_row2 = 1, query_glass2 = 1;
+    printf("%.5f\n", champagneTower(poured2, query_row2, query_glass2));
+
+    return 0;
+}
