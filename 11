@@ -1,0 +1,37 @@
+#include <stdio.h>
+#define MOD 1000000007
+int findPaths(int m, int n, int N, int i, int j) {
+    int dp[51][50][50] = {0};
+    dp[0][i][j] = 1;
+    int result = 0;
+
+    for (int step = 1; step <= N; step++) {
+        for (int x = 0; x < m; x++) {
+            for (int y = 0; y < n; y++) {
+                if (x == 0) result = (result + dp[step - 1][x][y]) % MOD;
+                if (x == m - 1) result = (result + dp[step - 1][x][y]) % MOD;
+                if (y == 0) result = (result + dp[step - 1][x][y]) % MOD;
+                if (y == n - 1) result = (result + dp[step - 1][x][y]) % MOD;
+
+                dp[step][x][y] = (
+                    ((x > 0 ? dp[step - 1][x - 1][y] : 0) + 
+                     (x < m - 1 ? dp[step - 1][x + 1][y] : 0)) % MOD +
+                    ((y > 0 ? dp[step - 1][x][y - 1] : 0) + 
+                     (y < n - 1 ? dp[step - 1][x][y + 1] : 0)) % MOD
+                ) % MOD;
+            }
+        }
+    }
+
+    return result;
+}
+
+int main() {
+    int m = 2, n = 2, N = 2, i = 0, j = 0;
+    printf("%d\n", findPaths(m, n, N, i, j));
+
+    m = 1, n = 3, N = 3, i = 0, j = 1;
+    printf("%d\n", findPaths(m, n, N, i, j));
+
+    return 0;
+}
