@@ -1,0 +1,32 @@
+#include <stdio.h>
+void findCommonIndices(int* nums1, int n, int* nums2, int m, int* answer1, int* answer2) {
+    *answer1 = 0;
+    *answer2 = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (nums1[i] == nums2[j]) {
+                (*answer1)++;
+                break;
+            }
+        }
+    }
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (nums2[i] == nums1[j]) {
+                (*answer2)++;
+                break;
+            }
+        }
+    }
+}
+
+int main() {
+    int nums1[] = {4, 3, 2, 3, 1};
+    int nums2[] = {2, 2, 5, 2, 3, 6};
+    int n = sizeof(nums1) / sizeof(nums1[0]);
+    int m = sizeof(nums2) / sizeof(nums2[0]);
+    int answer1, answer2;
+    findCommonIndices(nums1, n, nums2, m, &answer1, &answer2);
+    printf("[%d, %d]\n", answer1, answer2);
+    return 0;
+}
