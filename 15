@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+int** largeGroupPositions(char* s, int* returnSize, int** returnColumnSizes) {
+    int length = strlen(s);
+    int** result = (int**)malloc(length * sizeof(int*));
+    *returnColumnSizes = (int*)malloc(length * sizeof(int));
+    *returnSize = 0;
+
+    for (int i = 0; i < length;) {
+        int start = i;
+        while (i < length && s[i] == s[start]) i++;
+        if (i - start >= 3) {
+            result[*returnSize] = (int*)malloc(2 * sizeof(int));
+            result[*returnSize][0] = start;
+            result[*returnSize][1] = i - 1;
+            (*returnColumnSizes)[*returnSize] = 2;
+            (*returnSize)++;
+        }
+    }
+
+    return result;
+}
+
+int main() {
+    char s1[] = "abbxxxxzzy";
+    int returnSize1;
+    int* returnColumnSizes1;
+    int** result1 = largeGroupPositions(s1, &returnSize1, &returnColumnSizes1);
+
+    for (int i = 0; i < returnSize1; i++) {
+        printf("[%d,%d]\n", result1[i][0], result1[i][1]);
+        free(result1[i]);
+    }
+    free(result1);
+    free(returnColumnSizes1);
+
+    char s2[] = "abc";
+    int returnSize2;
+    int* returnColumnSizes2;
+    int** result2 = largeGroupPositions(s2, &returnSize2, &returnColumnSizes2);
+
+    for (int i = 0; i < returnSize2; i++) {
+        printf("[%d,%d]\n", result2[i][0], result2[i][1]);
+        free(result2[i]);
+    }
+    free(result2);
+    free(returnColumnSizes2);
+
+    return 0;
+}
