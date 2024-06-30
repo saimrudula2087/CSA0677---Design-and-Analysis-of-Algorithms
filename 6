@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <stdlib.h>
+int compare(const void* a, const void* b) {
+    return (*(int*)a - *(int*)b);
+}
+
+int findMaxInSortedArray(int* nums, int numsSize) {
+    if (numsSize == 0) return -1; // Assuming -1 indicates an empty array
+    qsort(nums, numsSize, sizeof(int), compare);
+    return nums[numsSize - 1];
+}
+
+int main() {
+    int nums1[] = {};
+    int nums2[] = {5};
+    int nums3[] = {3, 3, 3, 3, 3};
+
+    printf("%d\n", findMaxInSortedArray(nums1, sizeof(nums1) / sizeof(nums1[0])));
+    printf("%d\n", findMaxInSortedArray(nums2, sizeof(nums2) / sizeof(nums2[0])));
+    printf("%d\n", findMaxInSortedArray(nums3, sizeof(nums3) / sizeof(nums3[0])));
+
+    return 0;
+}
