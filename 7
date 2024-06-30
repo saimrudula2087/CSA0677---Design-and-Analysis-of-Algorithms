@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <stdlib.h>
+int* uniqueElements(int* nums, int numsSize, int* returnSize) {
+    int* hashTable = calloc(1000001, sizeof(int)); // Assuming input values are within range [-1000000, 1000000]
+    int* result = malloc(numsSize * sizeof(int));
+    *returnSize = 0;
+
+    for (int i = 0; i < numsSize; i++) {
+        int val = nums[i] + 1000000;
+        if (hashTable[val] == 0) {
+            result[(*returnSize)++] = nums[i];
+            hashTable[val] = 1;
+        }
+    }
+    free(hashTable);
+    return result;
+}
+
+int main() {
+    int nums[] = {3, 7, 3, 5, 2, 5, 9, 2};
+    int numsSize = sizeof(nums) / sizeof(nums[0]);
+    int returnSize;
+    int* result = uniqueElements(nums, numsSize, &returnSize);
+
+    for (int i = 0; i < returnSize; i++) {
+        printf("%d ", result[i]);
+    }
+    printf("\n");
+
+    free(result);
+    return 0;
+}
