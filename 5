@@ -1,0 +1,22 @@
+#include <stdio.h>
+
+int findMax(int* nums, int numsSize) {
+    if (numsSize == 0) return -1; 
+    int max = nums[0];
+    for (int i = 1; i < numsSize; i++) {
+        if (nums[i] > max) max = nums[i];
+    }
+    return max;
+}
+
+int main() {
+    int nums1[] = {1, 2, 3, 4, 5};
+    int nums2[] = {7, 7, 7, 7, 7};
+    int nums3[] = {-10, 2, 3, -4, 5};
+
+    printf("%d\n", findMax(nums1, sizeof(nums1) / sizeof(nums1[0])));
+    printf("%d\n", findMax(nums2, sizeof(nums2) / sizeof(nums2[0])));
+    printf("%d\n", findMax(nums3, sizeof(nums3) / sizeof(nums3[0])));
+
+    return 0;
+}
