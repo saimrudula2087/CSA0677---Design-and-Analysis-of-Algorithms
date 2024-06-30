@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <stdlib.h>
+int sumOfSquaresOfDistinctCounts(int* nums, int numsSize) {
+    int total = 0;
+    for (int i = 0; i < numsSize; i++) {
+        int distinctCount = 0;
+        int count[101] = {0};
+        for (int j = i; j < numsSize; j++) {
+            if (count[nums[j]] == 0) {
+                distinctCount++;
+            }
+            count[nums[j]]++;
+            total += distinctCount * distinctCount;
+        }
+    }
+    return total;
+}
+
+int main() {
+    int nums[] = {1, 2, 1};
+    int numsSize = sizeof(nums) / sizeof(nums[0]);
+    int result = sumOfSquaresOfDistinctCounts(nums, numsSize);
+    printf("%d\n", result);
+    return 0;
+}
