@@ -1,0 +1,29 @@
+#include<stdio.h>
+int bis(int a[],int low,int high,int target)
+{
+	int mid;
+	if(high>=low)
+	{
+		mid=(low+high)/2;
+		if(a[mid]==target)
+		{
+			return mid;
+		}
+		else if(a[mid]<target)
+		{
+			return bis(a,mid+1,high,target);
+		}
+		else
+		{
+			return bis(a,low,mid-1,target);
+		}
+	}
+	return -1;
+}
+int main()
+{
+	int n=9,a[]={5,10,15,20,25,30,35,40,45};
+	int target=20;
+	int res=bis(a,1,n,target);
+	printf("%d",res);
+}
