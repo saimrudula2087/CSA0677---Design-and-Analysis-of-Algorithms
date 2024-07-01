@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX_VERTICES 100
+int max_degree(int n, int adjacency[MAX_VERTICES][MAX_VERTICES]) {
+    int max_degree = 0;
+    for (int i = 0; i < n; ++i) {
+        int degree = 0;
+        for (int j = 0; j < n; ++j) {
+            if (adjacency[i][j] == 1)
+                degree++;
+        }
+        if (degree > max_degree)
+            max_degree = degree;
+    }
+    return max_degree;
+}
+void greedy_coloring(int n, int adjacency[MAX_VERTICES][MAX_VERTICES], int color_map[MAX_VERTICES]) {
+    int colors_used = 0;    
+    for (int vertex = 0; vertex < n; ++vertex) {
+        int neighbor_colors[MAX_VERTICES] = {0};
+        
+        for (int neighbor = 0; neighbor < n; ++neighbor) {
+            if (adjacency[vertex][neighbor] == 1 && color_map[neighbor] != 0) {
+                neighbor_colors[color_map[neighbor]] = 1;
+            }
+        }
+        for (int color = 1; color <= colors_used; ++color) {
+            if (neighbor_colors[color] == 0) {
+                color_map[vertex] = color;
+                break;
+            }
+        }
+        
+        if (color_map[vertex] == 0) {
+            colors_used++;
+            color_map[vertex] = colors_used;
+        }
+    }
+}
+int main() {
+    int n = 4; 
+    int adjacency[MAX_VERTICES][MAX_VERTICES] = {
+        {0, 1, 0, 1},
+        {1, 0, 1, 0},
+        {0, 1, 0, 0},
+        {1, 0, 0, 0}
+    };
+
+    int max_deg = max_degree(n, adjacency);
+    
+    int color_map[MAX_VERTICES] = {0};
+    
+    greedy_coloring(n, adjacency, color_map);
+    
+    
+    printf("Colors assigned to vertices:\n");
+    for (int i = 0; i < n; ++i) {
+        printf("Vertex %d: Color %d\n", i, color_map[i]);
+    }
+    
+    return 0;
+}
+
