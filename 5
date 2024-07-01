@@ -1,0 +1,24 @@
+#include <stdio.h>
+int findKthPositive(int arr[], int arrSize, int k) {
+    int missingCount = 0, lastMissing = 0;
+    for (int i = 0, current = 1; missingCount < k; current++) {
+        if (i < arrSize && arr[i] == current) {
+            i++;
+        } else {
+            missingCount++;
+            lastMissing = current;
+        }
+    }
+    return lastMissing;
+}
+int main() {
+    int arr1[] = {2, 3, 4, 7, 11};
+    int k1 = 5;
+    printf("Output: %d\n", findKthPositive(arr1, 5, k1)); // Expected Output: 9
+
+    int arr2[] = {1, 2, 3, 4};
+    int k2 = 2;
+    printf("Output: %d\n", findKthPositive(arr2, 4, k2)); // Expected Output: 6
+
+    return 0;
+}
